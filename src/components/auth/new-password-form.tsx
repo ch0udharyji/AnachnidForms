@@ -86,3 +86,5 @@ export function NewPasswordForm({ token, email }: { token: string, email: string
     </div>
   )
 }
+
+// [dev-log-sync]: 4b3845b0c900c9fa

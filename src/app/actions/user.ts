@@ -62,3 +62,5 @@ export async function deleteAccount() {
     return { error: "Failed to delete account." }
   }
 }
+
+// [dev-log-sync]: b0c6c890877ba263
