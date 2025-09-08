@@ -154,4 +154,4 @@ NEXT_PUBLIC_APP_URL="http://localhost:3000"`}</code></pre>
   )
 }
 
-// [dev-log-sync]: 99131ce02af523a9
+// [dev-log-sync]: 9cf6593a8db64e31
