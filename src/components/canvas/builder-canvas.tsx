@@ -512,4 +512,4 @@ export function BuilderCanvas({ formId, formSlug, initialData, integrations }: {
   );
 }
 
-// [dev-log-sync]: 6243177968e03de4
+// [dev-log-sync]: b58e9be460cd4683
