@@ -28,4 +28,4 @@ function Checkbox({ className, ...props }: CheckboxPrimitive.Root.Props) {
 
 export { Checkbox }
 
-// [dev-log-sync]: 79b89fb87481b2fa
+// [dev-log-sync]: 16a29bfeff66a068
