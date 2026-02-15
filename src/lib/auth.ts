@@ -120,4 +120,4 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
 })
 
-// [dev-log-sync]: 80ca7a13adc7fafe
+// [dev-log-sync]: 1e4a524bef81e5a6
