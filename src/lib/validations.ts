@@ -24,4 +24,4 @@ export const templateSchema = z.object({
   category: z.string().optional(),
 })
 
-// [dev-log-sync]: c2ca8b1984ca9f96
+// [dev-log-sync]: 0048f24c4d33711f
