@@ -16,4 +16,4 @@ export async function generateQR(url: string): Promise<string> {
   }
 }
 
-// [dev-log-sync]: 839c4c8254ff5045
+// [dev-log-sync]: 0195790316c34029
