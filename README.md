@@ -73,13 +73,22 @@ Export all your form responses with a single click securely to your local device
 
 ### 1. Prerequisites
 
-Ensure you have the following installed on your local machine:
+Ensure you have the following tools installed on your local machine:
 ◆ **Node.js** (v18.17 or higher)
-◆ **npm** or **yarn**
+◆ **npm** (v9+ recommended) or **yarn**
+◆ **Git**
+◆ **PostgreSQL** (Local installation or a remote instance like Supabase/Neon)
 
-### 2. Installation
+### 2. Repository Setup
 
-Clone the repository and install the dependencies:
+Clone the repository to your local machine and navigate into the project directory:
+
+```bash
+git clone https://github.com/your-username/arachnidforms.git
+cd arachnidforms
+```
+
+Install the required Node dependencies:
 
 ```bash
 npm install
@@ -87,32 +96,51 @@ npm install
 
 ### 3. Environment Configuration
 
-Copy the `.env.example` file to `.env`:
+The application requires several environment variables to function correctly. Start by duplicating the provided example file:
 
 ```bash
 cp .env.example .env
 ```
 
-Update your `.env` with your PostgreSQL database URL, Auth.js secret, and any required OAuth credentials.
+Open `.env` in your preferred text editor and configure the core variables:
 
-### 4. Database Setup
+◆ **DATABASE_URL**: Your PostgreSQL connection string. If using a connection pooler like Supabase PgBouncer, ensure you append `?pgbouncer=true`.
+◆ **AUTH_SECRET**: A secure 32-character string required by NextAuth (Auth.js) to encrypt sessions. You can easily generate one via your terminal:
+```bash
+openssl rand -base64 32
+```
+◆ **OAuth Providers (Optional)**: If you intend to use Google or Discord logins, provide their respective `CLIENT_ID` and `CLIENT_SECRET` values. Without these, you can still securely log in using the "Test Mode" option.
 
-Generate the Prisma client and push your schema to the database:
+### 4. Database Initialization
+
+With your `DATABASE_URL` configured, initialize the Prisma ORM. 
+
+First, generate the strictly-typed TypeScript client so Next.js can communicate with your database:
 
 ```bash
 npx prisma generate
+```
+
+Next, push the database schema to your PostgreSQL instance to create all the necessary tables:
+
+```bash
 npx prisma db push
 ```
 
-### 5. Running Locally
+### 5. Launch Development Server
 
-Start the local development server:
+You are now ready to boot up the local development environment:
 
 ```bash
 npm run dev
 ```
 
-Navigate to `https://anachnidforms.vercel.app` (or your configured `AUTH_URL`) in your browser to see the application running.
+The server will start on port `3000`. Navigate to `http://localhost:3000` (or your configured `AUTH_URL`) in your web browser. 
+
+### 6. Accessing the Dashboard
+
+When the app loads, click the login/signup button. 
+If you haven't configured Google or Discord, simply click the **"Go in test mode"** button. This will automatically provision a temporary test account and route you straight to the builder dashboard, allowing you to seamlessly bypass OAuth setup during initial testing!
 
 ---
 
