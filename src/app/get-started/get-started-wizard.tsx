@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Code, CheckCircle, Database, LayoutDashboard, Key, UploadCloud, DownloadCloud, ArrowRight, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SignOutButton } from "@/components/shared/sign-out-button";
 
 export default function GetStartedWizard({ envStatus }: { envStatus?: { hasSmtp: boolean; hasS3: boolean } }) {
   const [step, setStep] = useState(1);
@@ -107,10 +108,14 @@ export default function GetStartedWizard({ envStatus }: { envStatus?: { hasSmtp:
       {/* Decorative Background Elements */}
       <div className="absolute top-0 left-0 w-full h-[30vh] bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
       
+      <div className="absolute top-4 right-6 z-50">
+        <SignOutButton />
+      </div>
+
       <div className="w-full h-screen relative z-10 flex flex-col bg-background overflow-hidden">
         
         {/* Header / Progress bar */}
-        <div className="flex border-b border-border h-16 shrink-0">
+        <div className="flex border-b border-border h-16 shrink-0 pt-4 md:pt-0">
           <div className={cn("flex-1 px-4 flex flex-col justify-center text-center border-r border-border transition-colors duration-300", step === 1 ? "bg-primary/5 border-b-2 border-b-primary text-primary" : "text-muted-foreground")}>
             <span className="text-[10px] font-bold uppercase tracking-widest font-mono">Step 1</span>
             <p className="text-xs font-medium mt-0.5">Welcome & Guide</p>
