@@ -67,6 +67,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
+    async signIn({ user, account }) {
+      // If a user links an OAuth account or signs in via standard credentials
+      if (account?.type === "oauth" || (account?.provider === "credentials" && !user?.email?.endsWith("@arachnidforms.local"))) {
+        if (user.isTestAccount) {
+          // Upgrade the account
+          await db.user.update({
+            where: { id: user.id },
+            data: { isTestAccount: false }
+          });
+          user.isTestAccount = false;
+        }
+      }
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
         token.isTestAccount = user.isTestAccount;
