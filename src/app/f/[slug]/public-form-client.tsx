@@ -119,11 +119,8 @@ export function PublicFormClient({ slug, title, canvasData, session }: { slug: s
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!session?.user || session?.user?.isTestAccount) {
-      // Save state before redirecting to login
-      localStorage.setItem(`form-draft-${slug}-id`, JSON.stringify(answersById));
-      localStorage.setItem(`form-draft-${slug}-label`, JSON.stringify(answersByLabel));
-      return signIn(undefined, { callbackUrl: pathname });
+    if (session?.user?.isTestAccount) {
+      return;
     }
 
     setIsSubmitting(true);
@@ -226,9 +223,7 @@ export function PublicFormClient({ slug, title, canvasData, session }: { slug: s
             <div className="bg-surface/30 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-border/50 text-center space-y-6">
               <h2 className="text-3xl font-extrabold tracking-tight">Ready to submit?</h2>
               
-              {!session?.user ? (
-                <p className="text-muted-foreground">You must sign in to submit your response. Your progress has been saved securely.</p>
-              ) : session.user.isTestAccount ? (
+              {session?.user?.isTestAccount ? (
                 <div className="p-3 bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 rounded-xl text-sm font-medium leading-relaxed">
                   Test accounts cannot submit forms. Please sign in with a real account to continue.
                 </div>
@@ -243,7 +238,7 @@ export function PublicFormClient({ slug, title, canvasData, session }: { slug: s
               )}
 
               <Button 
-                onClick={handleSubmit} 
+                onClick={session?.user?.isTestAccount ? () => signIn(undefined, { callbackUrl: pathname }) : handleSubmit} 
                 disabled={isSubmitting}
                 className={cn(
                   "h-12 px-8 text-base font-bold rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all w-full sm:w-auto",
@@ -252,7 +247,7 @@ export function PublicFormClient({ slug, title, canvasData, session }: { slug: s
               >
                 {isSubmitting ? (
                   <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Submitting...</>
-                ) : !session?.user || session?.user?.isTestAccount ? (
+                ) : session?.user?.isTestAccount ? (
                   <>Sign In to Submit <ChevronRight className="w-5 h-5 ml-2" /></>
                 ) : (
                   <>Submit Response <CheckCircle2 className="w-5 h-5 ml-2" /></>

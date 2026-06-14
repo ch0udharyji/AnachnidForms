@@ -10,8 +10,13 @@ import Link from "next/link"
 import { ArrowRight, Loader2 } from "lucide-react"
 
 
+import { useSearchParams } from "next/navigation"
+
 export function RegisterForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard"
+  
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -97,10 +102,10 @@ export function RegisterForm() {
       </div>
       
       <div className="flex flex-col space-y-3">
-        <Button variant="outline" className="h-11 bg-surface border-border hover:bg-muted transition-colors" onClick={() => signIn("discord", { callbackUrl: "/dashboard" })}>
+        <Button variant="outline" className="h-11 bg-surface border-border hover:bg-muted transition-colors" onClick={() => signIn("discord", { callbackUrl })}>
           Continue with Discord
         </Button>
-        <Button variant="outline" className="h-11 bg-surface border-border hover:bg-muted transition-colors" onClick={() => signIn("google", { callbackUrl: "/dashboard" })}>
+        <Button variant="outline" className="h-11 bg-surface border-border hover:bg-muted transition-colors" onClick={() => signIn("google", { callbackUrl })}>
           Continue with Google
         </Button>
         <Button 
@@ -109,7 +114,7 @@ export function RegisterForm() {
           className="w-full h-11 bg-surface border-border hover:bg-muted transition-colors" 
           onClick={() => {
             setLoading(true)
-            signIn("credentials", { isTestMode: "true", callbackUrl: "/dashboard" })
+            signIn("credentials", { isTestMode: "true", callbackUrl })
           }}
           disabled={loading}
         >

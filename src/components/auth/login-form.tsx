@@ -10,8 +10,13 @@ import Link from "next/link"
 import { ArrowRight, Loader2 } from "lucide-react"
 
 
+import { useSearchParams } from "next/navigation"
+
 export function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard"
+  
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
@@ -32,7 +37,7 @@ export function LoginForm() {
       setError("Invalid email or password")
       setLoading(false)
     } else {
-      router.push("/dashboard")
+      router.push(callbackUrl)
       router.refresh()
     }
   }
@@ -96,10 +101,10 @@ export function LoginForm() {
       </div>
       
       <div className="flex flex-col space-y-3">
-        <Button variant="outline" className="h-11 bg-surface border-border hover:bg-muted transition-colors" onClick={() => signIn("discord", { callbackUrl: "/dashboard" })}>
+        <Button variant="outline" className="h-11 bg-surface border-border hover:bg-muted transition-colors" onClick={() => signIn("discord", { callbackUrl })}>
           Continue with Discord
         </Button>
-        <Button variant="outline" className="h-11 bg-surface border-border hover:bg-muted transition-colors" onClick={() => signIn("google", { callbackUrl: "/dashboard" })}>
+        <Button variant="outline" className="h-11 bg-surface border-border hover:bg-muted transition-colors" onClick={() => signIn("google", { callbackUrl })}>
           Continue with Google
         </Button>
         <Button 
@@ -108,7 +113,7 @@ export function LoginForm() {
           className="w-full h-11 bg-surface border-border hover:bg-muted transition-colors" 
           onClick={() => {
             setLoading(true)
-            signIn("credentials", { isTestMode: "true", callbackUrl: "/dashboard" })
+            signIn("credentials", { isTestMode: "true", callbackUrl })
           }}
           disabled={loading}
         >
