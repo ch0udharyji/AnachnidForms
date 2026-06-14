@@ -1,163 +1,163 @@
 <div align="center">
-  <img src="./public/header.png" alt="ArachnidForms Logo" width="800" />
-
+  <img src="./public/header.png" alt="ArachnidForms" width="800" />
   <h1>ArachnidForms</h1>
-
   <p>
     <b>A modern, high-performance form builder built on the Next.js App Router.</b>
   </p>
-
-  <!-- Badges -->
   <p>
     <img src="https://img.shields.io/badge/version-0.1.0-blue?style=for-the-badge&color=000000&labelColor=222222" alt="Version" />
     <img src="https://img.shields.io/badge/Next.js-14.0+-black?style=for-the-badge&logo=next.js&color=000000&labelColor=222222" alt="Next.js" />
     <img src="https://img.shields.io/badge/TypeScript-Ready-blue?style=for-the-badge&logo=typescript&color=000000&labelColor=222222" alt="TypeScript" />
     <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge&color=000000&labelColor=222222" alt="License" />
   </p>
-
   <p>
-    <a href="#-features">Features</a> •
-    <a href="#-tech-stack">Tech Stack</a> •
-    <a href="#-getting-started">Getting Started</a> •
-    <a href="#-documentation">Documentation</a>
+    <a href="#overview">Overview</a> &nbsp;•&nbsp;
+    <a href="#features">Features</a> &nbsp;•&nbsp;
+    <a href="#tech-stack">Tech Stack</a> &nbsp;•&nbsp;
+    <a href="#getting-started">Getting Started</a> &nbsp;•&nbsp;
+    <a href="#documentation">Documentation</a>
   </p>
 </div>
 
-<br/>
+---
 
-## ❖ Overview
+## Overview
 
-ArachnidForms is designed for creators, businesses, and developers who need complex forms without the hassle. It features a powerful drag-and-drop node-based builder, real-time conditional logic, and a beautifully interactive respondent experience.
+ArachnidForms is a visual form builder designed for creators, businesses, and developers who require complex form logic without operational overhead. It provides a node-based drag-and-drop canvas, real-time conditional branching, and a streamlined respondent experience — all within a single, self-hostable application.
 
 ---
 
-## ❖ Features
+## Features
 
-▸ **Visual Node Builder**  
-Build your forms using a completely free-form infinite canvas. Connect questions with edges just like a flowchart.
+**Visual Node Builder**
+Compose forms on a free-form infinite canvas. Questions are represented as nodes and connected via edges, giving you a clear visual map of your form's entire flow.
 
-▸ **Smart Logic Branching**  
-Use Logic Nodes to dynamically skip or route users to different questions based on their previous answers.
+**Conditional Logic Branching**
+Insert Logic Nodes to dynamically route respondents to different questions based on prior answers, enabling sophisticated survey paths and decision trees.
 
-▸ **Sleek Viewer Experience**  
-Respondents get a focused, one-question-at-a-time experience with full keyboard navigation support.
+**Focused Respondent Experience**
+Respondents see one question at a time with full keyboard navigation support, reducing friction and improving completion rates.
 
-▸ **Template Gallery**  
-Jumpstart your workflow with dozens of intelligent templates that auto-generate fully connected, ready-to-use form flows.
+**Template Gallery**
+Bootstrap new forms using a curated library of templates that ship as fully wired, ready-to-use node graphs.
 
-▸ **Visual Analytics Dashboard**  
-Automatically generated Pie Charts and Bar Charts for multiple-choice and rating questions.
+**Analytics Dashboard**
+Automatically generated pie and bar charts for multiple-choice and rating questions, providing immediate insight into response distributions.
 
-▸ **Export Capabilities**  
-Export all your form responses with a single click securely to your local device via CSV.
+**CSV Export**
+Download all form responses directly to your local device with a single action. No third-party data intermediaries involved.
 
-▸ **Spam Protection & Security**  
-Integrated Google reCAPTCHA v3 to seamlessly prevent bot submissions without interrupting users. Users can provide their own API keys via the dashboard settings.
+**Spam Protection**
+Google reCAPTCHA v3 is integrated at the form level to silently block bot submissions. Users may supply their own reCAPTCHA API keys via the dashboard settings.
 
 ---
 
-## ❖ Tech Stack
+## Tech Stack
 
-| Domain | Technology | Description |
+| Domain | Technology | Purpose |
 | :--- | :--- | :--- |
-| **Core** | `Next.js 14` | React framework using the App Router |
-| **Language** | `TypeScript` | Strongly typed programming language |
-| **Database** | `PostgreSQL` | Relational database system |
-| **ORM** | `Prisma` | Next-generation Node.js and TypeScript ORM |
-| **Authentication**| `Auth.js` | Complete open source authentication |
+| **Framework** | `Next.js 14` | React framework using the App Router |
+| **Language** | `TypeScript` | End-to-end static typing |
+| **Database** | `PostgreSQL` | Primary relational data store |
+| **ORM** | `Prisma` | Type-safe database client and schema management |
+| **Authentication** | `Auth.js` | Session management and OAuth provider integration |
 | **Styling** | `Tailwind CSS` | Utility-first CSS framework |
-| **Components** | `Shadcn UI` | Beautifully designed, accessible UI components |
-| **Canvas** | `React Flow` | Highly customizable node-based UI |
+| **UI Components** | `Shadcn UI` | Accessible, composable component primitives |
+| **Canvas** | `React Flow` | Node and edge rendering for the form builder |
 | **Charts** | `Recharts` | Composable charting library built on React |
 
 ---
 
-## ❖ Getting Started
+## Getting Started
 
-### 1. Prerequisites
+### Prerequisites
 
-Ensure you have the following tools installed on your local machine:
-◆ **Node.js** (v18.17 or higher)
-◆ **npm** (v9+ recommended) or **yarn**
-◆ **Git**
-◆ **PostgreSQL** (Local installation or a remote instance like Supabase/Neon)
+Ensure the following are installed on your local machine before proceeding:
 
-### 2. Repository Setup
+- **Node.js** v18.17 or higher
+- **npm** v9+ (or **yarn**)
+- **Git**
+- **PostgreSQL** — local installation, or a hosted instance such as Supabase or Neon
 
-Clone the repository to your local machine and navigate into the project directory:
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/your-username/arachnidforms.git
 cd arachnidforms
 ```
 
-Install the required Node dependencies:
+Install dependencies:
 
 ```bash
 npm install
 ```
 
-### 3. Environment Configuration
+### 2. Configure Environment Variables
 
-The application requires several environment variables to function correctly. Start by duplicating the provided example file:
+Duplicate the example environment file:
 
 ```bash
 cp .env.example .env
 ```
 
-Open `.env` in your preferred text editor and configure the core variables:
+Open `.env` and set the following variables:
 
-◆ **DATABASE_URL**: Your PostgreSQL connection string. If using a connection pooler like Supabase PgBouncer, ensure you append `?pgbouncer=true`.
-◆ **AUTH_SECRET**: A secure 32-character string required by NextAuth (Auth.js) to encrypt sessions. You can easily generate one via your terminal:
+**`DATABASE_URL`**
+Your PostgreSQL connection string. If you are using a connection pooler such as Supabase PgBouncer, append `?pgbouncer=true` to the URL.
+
+**`AUTH_SECRET`**
+A secure random string used by Auth.js to encrypt sessions. Generate one with:
+
 ```bash
 openssl rand -base64 32
 ```
-◆ **OAuth Providers (Optional)**: If you intend to use Google or Discord logins, provide their respective `CLIENT_ID` and `CLIENT_SECRET` values. Without these, you can still securely log in using the "Test Mode" option.
-◆ **Spam Protection (Optional)**: To enable reCAPTCHA v3 on forms, provide `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` and `RECAPTCHA_SECRET_KEY`. (Note: Users can also configure their own keys individually from the dashboard).
 
-### 4. Database Initialization
+**`OAuth Providers`** _(optional)_
+To enable Google or Discord login, provide the corresponding `CLIENT_ID` and `CLIENT_SECRET` values. If omitted, the application remains accessible via the built-in Test Mode.
 
-With your `DATABASE_URL` configured, initialize the Prisma ORM. 
+**`reCAPTCHA`** _(optional)_
+Set `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` and `RECAPTCHA_SECRET_KEY` to enable spam protection on forms. Individual users may also configure their own keys from the dashboard settings.
 
-First, generate the strictly-typed TypeScript client so Next.js can communicate with your database:
+### 3. Initialize the Database
+
+Generate the Prisma TypeScript client:
 
 ```bash
 npx prisma generate
 ```
 
-Next, push the database schema to your PostgreSQL instance to create all the necessary tables:
+Push the schema to your PostgreSQL instance to create all required tables:
 
 ```bash
 npx prisma db push
 ```
 
-### 5. Launch Development Server
-
-You are now ready to boot up the local development environment:
+### 4. Start the Development Server
 
 ```bash
 npm run dev
 ```
 
-The server will start on port `3000`. Navigate to `http://localhost:3000` (or your configured `AUTH_URL`) in your web browser. 
+The application will be available at `http://localhost:3000` (or the URL specified in `AUTH_URL`).
 
-### 6. Accessing the Dashboard
+### 5. Accessing the Dashboard
 
-When the app loads, click the login/signup button. 
-If you haven't configured Google or Discord, simply click the **"Go in test mode"** button. This will automatically provision a temporary test account and route you straight to the builder dashboard, allowing you to seamlessly bypass OAuth setup during initial testing!
+On first load, click the login or sign-up button. If OAuth providers have not been configured, select **"Go in test mode"** to provision a temporary account and proceed directly to the builder dashboard.
 
 ---
 
-## ❖ Documentation
+## Documentation
 
-Detailed documentation on extending ArachnidForms, creating custom nodes, and managing API keys can be found inside the application dashboard under the **Docs & Setup** section.
+In-application documentation covering advanced configuration, custom node development, and API key management is available under the **Docs & Setup** section of the dashboard.
 
-◆ **Form Nodes**: Understand the schema structure required for adding new node types.
-◆ **Webhooks**: Configure endpoints to receive real-time payload submissions.
-◆ **Analytics**: Export data structure details and chart implementations.
+**Form Nodes** — Schema structure and field definitions required to implement new node types.
+
+**Webhooks** — Configure endpoints to receive real-time form submission payloads.
+
+**Analytics** — Exported data structures and chart implementation details.
 
 ---
 
 <div align="center">
-  <p>Built with precision and high performance in mind.</p>
+  <p>Built with precision and performance in mind.</p>
 </div>
