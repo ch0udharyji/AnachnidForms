@@ -23,7 +23,7 @@ interface FormNode {
   };
 }
 
-export function PublicFormClient({ slug, title, canvasData, session }: { slug: string, title: string, canvasData: any, session: any }) {
+export function PublicFormClient({ slug, title, canvasData, session, previousResponse }: { slug: string, title: string, canvasData: any, session: any, previousResponse?: any }) {
   const pathname = usePathname();
   const [hasVisited, setHasVisited] = useState(false);
   const [answersById, setAnswersById] = useState<Record<string, any>>({});
@@ -32,15 +32,32 @@ export function PublicFormClient({ slug, title, canvasData, session }: { slug: s
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Load from local storage on mount
+  // Load from local storage on mount, or from previous response if editing
   useEffect(() => {
     try {
       const savedById = localStorage.getItem(`form-draft-${slug}-id`);
       const savedByLabel = localStorage.getItem(`form-draft-${slug}-label`);
-      if (savedById) setAnswersById(JSON.parse(savedById));
-      if (savedByLabel) setAnswersByLabel(JSON.parse(savedByLabel));
+      if (savedById && savedByLabel) {
+        setAnswersById(JSON.parse(savedById));
+        setAnswersByLabel(JSON.parse(savedByLabel));
+      } else if (previousResponse) {
+        let constructedById = previousResponse.answersById || {};
+        const byLabel = previousResponse.answers || {};
+        
+        // Backward compatibility for old responses that didn't save answersById
+        if (Object.keys(constructedById).length === 0 && Object.keys(byLabel).length > 0) {
+          canvasData?.nodes?.forEach((node: any) => {
+            if (node.data?.label && byLabel[node.data.label] !== undefined) {
+              constructedById[node.id] = byLabel[node.data.label];
+            }
+          });
+        }
+        
+        setAnswersById(constructedById);
+        setAnswersByLabel(byLabel);
+      }
     } catch (e) {}
-  }, [slug]);
+  }, [slug, previousResponse]);
 
   useEffect(() => {
     if (!hasVisited) {
@@ -130,7 +147,11 @@ export function PublicFormClient({ slug, title, canvasData, session }: { slug: s
       const res = await fetch(`/api/f/${slug}/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ answers: answersByLabel })
+        body: JSON.stringify({ 
+          answers: answersByLabel, 
+          answersById: answersById, 
+          responseId: previousResponse?.id 
+        })
       });
 
       const data = await res.json();
@@ -185,7 +206,9 @@ export function PublicFormClient({ slug, title, canvasData, session }: { slug: s
             <CheckCircle2 className="w-10 h-10" />
           </div>
           <h2 className="text-3xl font-extrabold tracking-tight">Thank You!</h2>
-          <p className="mt-2 text-lg text-muted-foreground">Your response has been successfully submitted.</p>
+          <p className="mt-2 text-lg text-muted-foreground">
+            {previousResponse ? "Your response has been successfully updated." : "Your response has been successfully submitted."}
+          </p>
         </div>
       </div>
     );
@@ -216,6 +239,13 @@ export function PublicFormClient({ slug, title, canvasData, session }: { slug: s
           <Button variant="ghost" onClick={handleBack} className="absolute -top-16 left-0 text-muted-foreground hover:text-foreground">
             <ArrowLeft className="w-4 h-4 mr-2" /> Back
           </Button>
+        )}
+
+        {previousResponse && (
+          <div className="absolute -top-16 right-0 bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium border border-primary/20 flex items-center">
+            <Sparkles className="w-3.5 h-3.5 mr-1.5" />
+            Editing previous response {previousResponse.editCount > 0 && `(Edited ${previousResponse.editCount}x)`}
+          </div>
         )}
 
         <div key={animationKey} className="animate-in fade-in slide-in-from-bottom-8 duration-500 fill-mode-both w-full">
@@ -250,7 +280,9 @@ export function PublicFormClient({ slug, title, canvasData, session }: { slug: s
                 ) : session?.user?.isTestAccount ? (
                   <>Sign In to Submit <ChevronRight className="w-5 h-5 ml-2" /></>
                 ) : (
-                  <>Submit Response <CheckCircle2 className="w-5 h-5 ml-2" /></>
+                  <>
+                    {previousResponse ? "Update Response" : "Submit Response"} <CheckCircle2 className="w-5 h-5 ml-2" />
+                  </>
                 )}
               </Button>
             </div>

@@ -11,7 +11,7 @@ export async function POST(request: Request, props: { params: Promise<{ id: stri
 
     const { id } = await props.params;
     const body = await request.json();
-    const { nodes, edges, expiresAt, status, title, description, maxResponses } = body;
+    const { nodes, edges, expiresAt, status, title, description, maxResponses, settings } = body;
 
     const form = await db.form.findUnique({
       where: { id }
@@ -30,7 +30,11 @@ export async function POST(request: Request, props: { params: Promise<{ id: stri
     };
 
     if (nodes && edges) {
-      updateData.canvasData = { nodes, edges };
+      const existingData = (form.canvasData as any) || {};
+      updateData.canvasData = { nodes, edges, settings: settings !== undefined ? settings : existingData.settings || {} };
+    } else if (settings !== undefined) {
+      const existingData = (form.canvasData as any) || {};
+      updateData.canvasData = { ...existingData, settings };
     }
     if (title !== undefined) updateData.title = title;
     if (description !== undefined) updateData.description = description;
