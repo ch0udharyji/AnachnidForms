@@ -17,7 +17,27 @@ export async function POST(
 
     const params = await props.params;
     const body = await req.json();
-    const { answers, answersById, responseId } = body;
+    const { answers, answersById, responseId, captchaToken } = body;
+
+    const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+    if (secretKey) {
+      if (!captchaToken) {
+        return NextResponse.json({ error: "Please complete the reCAPTCHA to submit." }, { status: 400 });
+      }
+
+      const verifyRes = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: `secret=${secretKey}&response=${captchaToken}`,
+      });
+
+      const verifyData = await verifyRes.json();
+      if (!verifyData.success) {
+        return NextResponse.json({ error: "reCAPTCHA verification failed. Please try again." }, { status: 400 });
+      }
+    }
 
     const form = await db.form.findUnique({
       where: { slug: params.slug },

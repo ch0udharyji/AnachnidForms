@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 
 import { signIn } from "next-auth/react";
 import { usePathname } from "next/navigation";
+import ReCAPTCHA from "react-google-recaptcha";
 
 interface FormNode {
   id: string;
@@ -31,6 +32,7 @@ export function PublicFormClient({ slug, title, canvasData, session, previousRes
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   // Load from local storage on mount, or from previous response if editing
   useEffect(() => {
@@ -150,7 +152,8 @@ export function PublicFormClient({ slug, title, canvasData, session, previousRes
         body: JSON.stringify({ 
           answers: answersByLabel, 
           answersById: answersById, 
-          responseId: previousResponse?.id 
+          responseId: previousResponse?.id,
+          captchaToken: captchaToken
         })
       });
 
@@ -267,9 +270,18 @@ export function PublicFormClient({ slug, title, canvasData, session, previousRes
                 </div>
               )}
 
+              {process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && !session?.user?.isTestAccount && (
+                <div className="flex justify-center mt-6">
+                  <ReCAPTCHA
+                    sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+                    onChange={(token) => setCaptchaToken(token)}
+                  />
+                </div>
+              )}
+
               <Button 
                 onClick={session?.user?.isTestAccount ? () => signIn(undefined, { callbackUrl: pathname }) : handleSubmit} 
-                disabled={isSubmitting}
+                disabled={isSubmitting || (!!process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && !session?.user?.isTestAccount && !captchaToken)}
                 className={cn(
                   "h-14 sm:h-16 px-8 sm:px-12 text-lg sm:text-xl font-bold rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all w-full sm:w-auto mt-6",
                   isSubmitting && "opacity-70 cursor-not-allowed"
