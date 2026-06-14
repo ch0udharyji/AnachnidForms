@@ -17,7 +17,7 @@ export async function POST(
 
     const params = await props.params;
     const body = await req.json();
-    const { answers } = body;
+    const { answers, answersById, responseId } = body;
 
     const form = await db.form.findUnique({
       where: { slug: params.slug },
@@ -40,18 +40,48 @@ export async function POST(
       return NextResponse.json({ error: "This form has expired" }, { status: 403 });
     }
 
-    if (form.maxResponses && form._count.responses >= form.maxResponses) {
-      return NextResponse.json({ error: "This form has reached its maximum number of responses" }, { status: 403 });
-    }
+    const settings = (form.canvasData as any)?.settings || {};
 
-    // Record response
-    await db.formResponse.create({
-      data: {
-        formId: form.id,
-        respondentId: session?.user?.id || null,
-        answers: answers || {},
+    if (responseId) {
+      // Handle Update
+      if (!settings.allowEdit) {
+        return NextResponse.json({ error: "Editing responses is not allowed for this form" }, { status: 403 });
       }
-    });
+
+      const existingResponse = await db.formResponse.findUnique({ where: { id: responseId } });
+      if (!existingResponse || existingResponse.formId !== form.id || existingResponse.respondentId !== session?.user?.id) {
+        return NextResponse.json({ error: "Response not found or unauthorized" }, { status: 403 });
+      }
+
+      const meta = (existingResponse.metadata as any) || {};
+      const editCount = (meta.editCount || 0) + 1;
+
+      if (settings.maxEdits && editCount > settings.maxEdits) {
+        return NextResponse.json({ error: "Maximum edit attempts reached" }, { status: 403 });
+      }
+
+      await db.formResponse.update({
+        where: { id: responseId },
+        data: {
+          answers: answers || {},
+          metadata: { ...meta, answersById: answersById || {}, editCount }
+        }
+      });
+    } else {
+      // Handle Create
+      if (form.maxResponses && form._count.responses >= form.maxResponses) {
+        return NextResponse.json({ error: "This form has reached its maximum number of responses" }, { status: 403 });
+      }
+
+      await db.formResponse.create({
+        data: {
+          formId: form.id,
+          respondentId: session?.user?.id || null,
+          answers: answers || {},
+          metadata: { answersById: answersById || {}, editCount: 0 }
+        }
+      });
+    }
 
     // Update visits/traffic on successful submission (optional, or tracked separately. Let's just track it here for simplicity if not done via page load)
     await db.form.update({

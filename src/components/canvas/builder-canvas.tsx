@@ -34,6 +34,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 
 const nodeTypes: NodeTypes = {
   questionNode: QuestionNode,
@@ -65,7 +66,9 @@ function CanvasArea({ formId, formSlug, initialData, integrations, isTestAccount
   
   const [shareConfig, setShareConfig] = useState({
     expiresIn: isTestAccount ? '15m' : '7d',
-    maxResponses: ''
+    maxResponses: '',
+    allowEdit: initialData?.settings?.allowEdit || false,
+    maxEdits: initialData?.settings?.maxEdits || ''
   });
   const [isPublished, setIsPublished] = useState(false);
 
@@ -118,7 +121,11 @@ function CanvasArea({ formId, formSlug, initialData, integrations, isTestAccount
           edges,
           expiresAt: expiresAt === null ? null : expiresAt?.toISOString(),
           status: status || "draft",
-          maxResponses: maxResponses || null
+          maxResponses: maxResponses || null,
+          settings: {
+            allowEdit: shareConfig.allowEdit,
+            maxEdits: shareConfig.maxEdits ? parseInt(shareConfig.maxEdits, 10) : null
+          }
         })
       });
 
@@ -490,6 +497,44 @@ function CanvasArea({ formId, formSlug, initialData, integrations, isTestAccount
                         </span>
                       )}
                     </div>
+                  </div>
+
+                  <div className="group border border-border bg-surface/50 rounded-xl p-4 transition-all hover:bg-surface/80 hover:border-primary/30">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-primary/10 text-primary rounded-lg">
+                          <Copy className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <Label className="text-base font-semibold">Allow Response Editing</Label>
+                          <p className="text-xs text-muted-foreground">Let users modify their submitted responses.</p>
+                        </div>
+                      </div>
+                      <Switch 
+                        checked={shareConfig.allowEdit} 
+                        onCheckedChange={(val) => setShareConfig({ ...shareConfig, allowEdit: val })}
+                      />
+                    </div>
+                    {shareConfig.allowEdit && (
+                      <div className="mt-4 pt-4 border-t border-border">
+                        <Label className="text-sm font-semibold mb-2 block">Maximum Edit Attempts</Label>
+                        <div className="relative">
+                          <Input
+                            type="number"
+                            min="1"
+                            placeholder="Unlimited"
+                            className="h-10 pl-4 bg-background/50 border-input font-mono focus-visible:ring-primary/20"
+                            value={shareConfig.maxEdits}
+                            onChange={(e) => setShareConfig({ ...shareConfig, maxEdits: e.target.value })}
+                          />
+                          {shareConfig.maxEdits && (
+                            <span className="absolute right-3 top-2.5 text-xs font-semibold tracking-wide text-primary uppercase">
+                              Attempts
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </>
               )}

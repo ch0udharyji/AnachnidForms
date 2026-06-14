@@ -60,12 +60,36 @@ export default async function PublicFormRenderer(props: { params: Promise<{ slug
     ? form.canvasData 
     : { nodes: [], edges: [] };
 
+  const settings = (canvasData as any).settings || {};
+  let previousResponse = null;
+
+  if (session?.user?.id && settings.allowEdit) {
+    const existingResponse = await db.formResponse.findFirst({
+      where: { formId: form.id, respondentId: session.user.id },
+      orderBy: { submittedAt: 'desc' }
+    });
+    if (existingResponse) {
+      const metadata = (existingResponse.metadata as any) || {};
+      const editCount = metadata.editCount || 0;
+      if (!settings.maxEdits || editCount < settings.maxEdits) {
+        // Serialize the response because we are passing it to a Client Component
+        previousResponse = {
+          id: existingResponse.id,
+          answers: existingResponse.answers,
+          answersById: metadata.answersById || {},
+          editCount: editCount
+        };
+      }
+    }
+  }
+
   return (
     <PublicFormClient 
       slug={params.slug} 
       title={form.title} 
       canvasData={canvasData} 
       session={session}
+      previousResponse={previousResponse}
     />
   );
 }
