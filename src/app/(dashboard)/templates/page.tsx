@@ -4,7 +4,6 @@ import { useState, useMemo, useTransition } from "react";
 import { Input } from "@/components/ui/input";
 import { Search, Heart, Users, Briefcase, Stethoscope, GraduationCap, ShoppingCart, Home, Scale, Sparkles, FileText, ChevronRight, Loader2 } from "lucide-react";
 import { createFormAction } from "@/app/actions/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 type Category = "Feedback" | "Events" | "HR" | "Marketing" | "IT" | "Healthcare" | "Education" | "E-commerce" | "Real Estate";
 
@@ -74,7 +73,7 @@ const categoryIcons: Record<Category, React.ElementType> = {
 
 export default function TemplatesPage() {
   const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState("category");
+  const [selectedCategory, setSelectedCategory] = useState<Category | "All">("All");
   const [isPending, startTransition] = useTransition();
 
   const handleUseTemplate = (title: string, description: string) => {
@@ -85,34 +84,14 @@ export default function TemplatesPage() {
   };
 
   const filteredTemplates = useMemo(() => {
-    let result = TEMPLATES.filter(t => 
-      t.title.toLowerCase().includes(search.toLowerCase()) || 
-      t.description.toLowerCase().includes(search.toLowerCase()) ||
-      t.category.toLowerCase().includes(search.toLowerCase())
-    );
+    return TEMPLATES.filter(t => {
+      const matchesSearch = t.title.toLowerCase().includes(search.toLowerCase()) || 
+                            t.description.toLowerCase().includes(search.toLowerCase());
+      const matchesCategory = selectedCategory === "All" || t.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }, [search, selectedCategory]);
 
-    if (sortBy === "asc") {
-      result = [...result].sort((a, b) => a.title.localeCompare(b.title));
-    } else if (sortBy === "desc") {
-      result = [...result].sort((a, b) => b.title.localeCompare(a.title));
-    }
-    
-    return result;
-  }, [search, sortBy]);
-
-  const groupedTemplates = useMemo(() => {
-    if (sortBy !== "category") return null;
-    
-    const groups = filteredTemplates.reduce((acc, template) => {
-      if (!acc[template.category]) {
-        acc[template.category] = [];
-      }
-      acc[template.category].push(template);
-      return acc;
-    }, {} as Record<string, Template[]>);
-
-    return Object.entries(groups).sort(([a], [b]) => a.localeCompare(b));
-  }, [filteredTemplates, sortBy]);
 
   return (
     <div className="w-full h-full flex flex-col space-y-6 pb-12">
@@ -121,92 +100,38 @@ export default function TemplatesPage() {
           <h1 className="text-3xl font-extrabold tracking-tight">Template Gallery</h1>
           <p className="text-muted-foreground mt-1">Jumpstart your workflow with {TEMPLATES.length}+ pre-built forms.</p>
         </div>
-        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input 
-              placeholder="Search templates..." 
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 bg-surface/50 border-border focus-visible:ring-primary/20 h-10 rounded-full"
-            />
-          </div>
-          <Select value={sortBy} onValueChange={(val) => val && setSortBy(val)}>
-            <SelectTrigger className="w-full sm:w-[180px] h-10 rounded-full bg-surface/50 border-border">
-              <SelectValue placeholder="Sort by" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="category">Category-wise</SelectItem>
-              <SelectItem value="asc">Alphabetical (A-Z)</SelectItem>
-              <SelectItem value="desc">Alphabetical (Z-A)</SelectItem>
-            </SelectContent>
-          </Select>
+        <div className="relative w-full sm:w-72">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input 
+            placeholder="Search templates..." 
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9 bg-surface/50 border-border focus-visible:ring-primary/20 h-10 rounded-full"
+          />
         </div>
+      </div>
+
+      <div className="flex flex-wrap gap-2 pb-2">
+        {["All", ...Object.keys(categoryIcons)].map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setSelectedCategory(cat as Category | "All")}
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ease-in-out ${
+              selectedCategory === cat 
+                ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 scale-105" 
+                : "bg-surface/50 text-muted-foreground hover:bg-surface/80 hover:text-foreground border border-border"
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
       </div>
 
       {filteredTemplates.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center p-12 text-center border border-dashed border-border rounded-xl bg-surface/20">
           <Sparkles className="w-12 h-12 text-muted-foreground mb-4 opacity-20" />
           <h3 className="text-lg font-bold">No templates found</h3>
-          <p className="text-muted-foreground text-sm max-w-sm mt-1">We couldn't find any templates matching "{search}". Try another search term.</p>
-        </div>
-      ) : sortBy === "category" && groupedTemplates ? (
-        <div className="space-y-10">
-          {groupedTemplates.map(([category, templates]) => {
-            const CategoryIcon = categoryIcons[category as Category];
-            return (
-              <div key={category} className="space-y-4">
-                <div className="flex items-center gap-2 border-b border-border/50 pb-2">
-                  <div className="p-1.5 bg-primary/10 text-primary rounded-lg">
-                    <CategoryIcon className="w-4 h-4" />
-                  </div>
-                  <h2 className="text-xl font-bold tracking-tight">{category}</h2>
-                  <span className="text-xs font-medium text-muted-foreground bg-surface/50 px-2 py-0.5 rounded-full ml-2">
-                    {templates.length} {templates.length === 1 ? 'template' : 'templates'}
-                  </span>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-                  {templates.map((template) => {
-                    const Icon = categoryIcons[template.category as Category];
-                    return (
-                      <div 
-                        key={template.id} 
-                        onClick={() => handleUseTemplate(template.title, template.description)}
-                        className={`group relative flex flex-col justify-between p-5 border border-border rounded-2xl bg-surface/30 hover:bg-surface/80 hover:border-primary/40 transition-all duration-300 ${isPending ? "opacity-50 cursor-not-allowed" : "cursor-pointer"} overflow-hidden`}
-                      >
-                        {/* Decorative background glow */}
-                        <div className="absolute -right-8 -top-8 w-24 h-24 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors pointer-events-none" />
-                        
-                        <div>
-                          <div className="flex justify-between items-start mb-4">
-                            <div className="p-2 bg-primary/10 text-primary rounded-xl">
-                              <Icon className="w-5 h-5" />
-                            </div>
-                          </div>
-                          
-                          <h3 className="text-base font-bold mb-1.5 group-hover:text-primary transition-colors pr-2">
-                            {template.title}
-                          </h3>
-                          <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-                            {template.description}
-                          </p>
-                        </div>
-
-                        <div className="mt-6 flex items-center justify-between border-t border-border/50 pt-4">
-                          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                            {template.category}
-                          </span>
-                          <div className="flex items-center text-xs font-semibold text-primary opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0 duration-300">
-                            Use Template <ChevronRight className="w-3 h-3 ml-1" />
-                          </div>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-            )
-          })}
+          <p className="text-muted-foreground text-sm max-w-sm mt-1">We couldn't find any templates matching your criteria. Try another search term or category.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
