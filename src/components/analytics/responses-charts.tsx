@@ -50,11 +50,38 @@ export function ResponsesCharts({ form }: { form: any }) {
         return { label, type: 'pie', data: chartData };
       } 
       
-      // Ratings and NPS mapped to ordered Bar Charts
-      if (['rating', 'nps', 'slider'].includes(type)) {
-        const freqs: Record<string, number> = {};
-        rawAnswers.forEach((ans: any) => { freqs[String(ans)] = (freqs[String(ans)] || 0) + 1; });
-        const chartData = Object.keys(freqs).sort((a,b) => Number(a) - Number(b)).map(k => ({ name: type === 'rating' ? k + ' Stars' : k, count: freqs[k] }));
+      // Ratings mapped to fixed 1-5 Bar Charts
+      if (type === 'rating') {
+        const chartData = [1, 2, 3, 4, 5].map(k => {
+          const count = rawAnswers.filter((a: any) => String(a) === String(k)).length;
+          return { name: `${k} Stars`, count };
+        });
+        return { label, type: 'bar', data: chartData };
+      }
+
+      // NPS mapped to fixed 0-10 Bar Charts
+      if (type === 'nps') {
+        const chartData = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(k => {
+          const count = rawAnswers.filter((a: any) => String(a) === String(k)).length;
+          return { name: String(k), count };
+        });
+        return { label, type: 'bar', data: chartData };
+      }
+
+      // Slider mapped to dynamic Bar Chart
+      if (type === 'slider') {
+        const nums = rawAnswers.map(Number).filter((n: number) => !isNaN(n));
+        if (nums.length === 0) return { label, type: 'bar', data: [] };
+        const min = Math.min(...nums);
+        const max = Math.max(...nums);
+        const chartData = [];
+        // Cap the spread to prevent 1 to 100 rendering 100 empty bars, just show sensible bounds
+        const range = max - min;
+        const step = range > 20 ? Math.ceil(range / 20) : 1;
+        for (let i = min; i <= max; i += step) {
+          const count = rawAnswers.filter((a: any) => Number(a) === i).length;
+          chartData.push({ name: String(i), count });
+        }
         return { label, type: 'bar', data: chartData };
       }
 
