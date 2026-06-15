@@ -1,6 +1,6 @@
 import { Metadata } from "next"
 import Link from "next/link"
-import { ArrowLeft, Code, Terminal, Database, Server } from "lucide-react"
+import { ArrowLeft, Code, Terminal, Database, Server, ChevronRight, Copy, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export const metadata: Metadata = {
@@ -10,146 +10,211 @@ export const metadata: Metadata = {
 
 export default function DocsPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-primary/30 py-12 px-6">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-background text-foreground selection:bg-primary/30 relative overflow-hidden">
+      {/* Dynamic Background Elements */}
+      <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+      <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-primary opacity-20 blur-[100px]"></div>
+      
+      <div className="max-w-5xl mx-auto px-6 py-16">
         
         {/* Header */}
-        <header className="mb-12">
-          <Link href="/" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors mb-6">
+        <header className="mb-16 text-center md:text-left relative z-10">
+          <Link href="/" className="inline-flex items-center text-sm font-semibold text-muted-foreground hover:text-primary transition-colors mb-8 bg-surface/50 border border-border/50 px-4 py-2 rounded-full backdrop-blur-md">
             <ArrowLeft className="w-4 h-4 mr-2" /> Back to Home
           </Link>
-          <h1 className="text-4xl md:text-5xl font-black tracking-tighter mb-4">Documentation & Setup</h1>
-          <p className="text-xl text-muted-foreground">
-            Everything you need to know to run your own instance of ArachnidForms.
-          </p>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+              <h1 className="text-5xl md:text-6xl font-black tracking-tighter mb-4 bg-clip-text text-transparent bg-gradient-to-r from-foreground to-muted-foreground">
+                Server Setup & Docs
+              </h1>
+              <p className="text-xl text-muted-foreground max-w-2xl">
+                Deploy your own autonomous form-building infrastructure. Complete with AI capabilities, payments, and self-destructing data pipelines.
+              </p>
+            </div>
+            <a href="https://github.com/ch0udharyji/AnachnidForms" target="_blank" rel="noopener noreferrer">
+              <Button size="lg" className="rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/40 font-bold border border-primary/50">
+                <Code className="w-4 h-4 mr-2" /> Source Code
+              </Button>
+            </a>
+          </div>
         </header>
 
         {/* Showcase Notice */}
-        <section className="bg-primary/10 border border-primary/20 rounded-xl p-6 mb-12 flex flex-col md:flex-row gap-6 items-start">
-          <div className="bg-primary/20 p-3 rounded-full flex-shrink-0">
-            <Server className="w-6 h-6 text-primary" />
-          </div>
-          <div>
-            <h2 className="text-2xl font-bold mb-2">Showcase & Testing Only</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              This hosted version of ArachnidForms is strictly a <strong>showcase and testing environment</strong>. 
-              The database is routinely cleared, and it is not intended for production use or collecting sensitive real-world data. 
-              If you love the platform and want to use it for your own projects, you are highly encouraged to fork the repository and host it on your own infrastructure!
-            </p>
-            <div className="mt-4">
-              <a href="https://github.com/ch0udharyji/AnachnidForms" target="_blank" rel="noopener noreferrer">
-                <Button className="font-bold">
-                  <Code className="w-4 h-4 mr-2" /> View Repository
-                </Button>
-              </a>
+        <section className="bg-background/40 backdrop-blur-xl border border-destructive/30 rounded-2xl p-8 mb-16 shadow-2xl relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-br from-destructive/10 to-transparent opacity-50"></div>
+          <div className="absolute -top-24 -right-24 w-48 h-48 bg-destructive/20 rounded-full blur-[80px] group-hover:bg-destructive/30 transition-all duration-700"></div>
+          
+          <div className="relative z-10 flex flex-col md:flex-row gap-8 items-start">
+            <div className="bg-destructive/10 border border-destructive/20 p-4 rounded-2xl flex-shrink-0 shadow-inner">
+              <Server className="w-8 h-8 text-destructive" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold mb-3 text-foreground">Production Deployment Notice</h2>
+              <p className="text-muted-foreground leading-relaxed text-lg">
+                This hosted version of ArachnidForms is strictly a <strong>showcase and testing environment</strong>. 
+                The database is routinely cleared, and it is not intended for collecting sensitive real-world data. 
+                To use ArachnidForms for your organization, follow the server setup guide below to host it on your own hardware or cloud provider.
+              </p>
             </div>
           </div>
         </section>
 
         <div className="space-y-12">
           {/* Step 1 */}
-          <section className="space-y-4">
-            <div className="flex items-center gap-3 border-b border-border/50 pb-2">
-              <Terminal className="w-6 h-6 text-primary" />
-              <h2 className="text-2xl font-bold">1. Prerequisites & Cloning</h2>
+          <section className="relative group">
+            <div className="absolute -inset-y-4 -inset-x-4 bg-surface/30 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+            <div className="flex items-center gap-4 mb-6">
+              <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 text-primary shadow-lg shadow-primary/5">
+                <Terminal className="w-6 h-6" />
+              </div>
+              <h2 className="text-3xl font-bold tracking-tight">1. Clone & Install</h2>
             </div>
-            <p className="text-muted-foreground">Before you begin, make sure you have <strong>Node.js 18+</strong> and <strong>PostgreSQL</strong> installed on your system.</p>
-            <div className="bg-card border border-border/50 rounded-lg p-4 font-mono text-sm overflow-x-auto">
-              <code>
-                git clone https://github.com/ch0udharyji/AnachnidForms.git<br/>
-                cd AnachnidForms<br/>
-                npm install
-              </code>
+            <p className="text-muted-foreground text-lg mb-6 pl-16">
+              Ensure you have <strong>Node.js 18+</strong> and <strong>PostgreSQL</strong> running. Clone the repository and install the dependencies to begin your server setup.
+            </p>
+            <div className="ml-16 bg-[#0d1117] border border-border/30 rounded-xl overflow-hidden shadow-2xl">
+              <div className="flex items-center px-4 py-3 border-b border-border/20 bg-[#161b22]">
+                <div className="flex gap-2">
+                  <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
+                  <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
+                </div>
+                <span className="ml-4 text-xs font-mono text-muted-foreground">bash</span>
+              </div>
+              <div className="p-6 font-mono text-sm leading-relaxed text-blue-300 overflow-x-auto">
+                <span className="text-green-400">git clone</span> https://github.com/ch0udharyji/AnachnidForms.git<br/>
+                <span className="text-green-400">cd</span> AnachnidForms<br/>
+                <span className="text-green-400">npm</span> install
+              </div>
             </div>
           </section>
 
           {/* Step 2 */}
-          <section className="space-y-4">
-            <div className="flex items-center gap-3 border-b border-border/50 pb-2">
-              <Database className="w-6 h-6 text-primary" />
-              <h2 className="text-2xl font-bold">2. Environment Configuration</h2>
+          <section className="relative group pt-6">
+            <div className="absolute -inset-y-4 -inset-x-4 bg-surface/30 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+            <div className="flex items-center gap-4 mb-6">
+              <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 text-primary shadow-lg shadow-primary/5">
+                <Database className="w-6 h-6" />
+              </div>
+              <h2 className="text-3xl font-bold tracking-tight">2. Environment Configuration</h2>
             </div>
-            <p className="text-muted-foreground">
-              Create a <code>.env</code> file in the root of your project. You will need to provide your database credentials and authentication secrets.
+            <p className="text-muted-foreground text-lg mb-6 pl-16">
+              Create a <code>.env</code> file in the root directory. This contains your global infrastructure secrets. User-specific keys (like Stripe and OpenAI) can be configured later via the dashboard UI.
             </p>
-            <div className="bg-card border border-border/50 rounded-lg p-4 font-mono text-sm overflow-x-auto text-muted-foreground">
-              <pre><code>{`DATABASE_URL="postgresql://user:password@localhost:5432/arachnidforms?schema=public"
-
-NEXTAUTH_URL="https://anachnidforms.vercel.app"
-NEXTAUTH_SECRET="generate-a-secure-secret-here"
-
-DISCORD_CLIENT_ID=""
-DISCORD_CLIENT_SECRET=""
-
-GOOGLE_CLIENT_ID=""
-GOOGLE_CLIENT_SECRET=""
-
-EMAIL_SERVER_USER=""
-EMAIL_SERVER_PASSWORD=""
-EMAIL_SERVER_HOST=""
-EMAIL_SERVER_PORT="587"
-EMAIL_FROM="noreply@arachnidforms.com"
-
-UPSTASH_REDIS_REST_URL=""
-UPSTASH_REDIS_REST_TOKEN=""
-
-RATE_LIMIT_REQUESTS="100"
-RATE_LIMIT_WINDOW_SECONDS="60"
-
-S3_ACCESS_KEY_ID=""
-S3_SECRET_ACCESS_KEY=""
-S3_REGION=""
-S3_BUCKET_NAME=""
-
-NEXT_PUBLIC_RECAPTCHA_SITE_KEY=""
-RECAPTCHA_SECRET_KEY=""
-
-NEXT_PUBLIC_APP_URL="https://anachnidforms.vercel.app"`}</code></pre>
+            <div className="ml-16 bg-[#0d1117] border border-border/30 rounded-xl overflow-hidden shadow-2xl">
+              <div className="flex items-center px-4 py-3 border-b border-border/20 bg-[#161b22]">
+                <div className="flex gap-2">
+                  <div className="w-3 h-3 rounded-full bg-border/50"></div>
+                  <div className="w-3 h-3 rounded-full bg-border/50"></div>
+                  <div className="w-3 h-3 rounded-full bg-border/50"></div>
+                </div>
+                <span className="ml-4 text-xs font-mono text-muted-foreground">.env</span>
+              </div>
+              <div className="p-6 font-mono text-sm leading-relaxed text-foreground overflow-x-auto">
+                <pre><code className="text-purple-300">DATABASE_URL<span className="text-foreground">=</span><span className="text-yellow-300">"postgresql://user:password@localhost:5432/arachnidforms"</span>
+{`
+`}NEXTAUTH_URL<span className="text-foreground">=</span><span className="text-yellow-300">"http://localhost:3000"</span>
+NEXTAUTH_SECRET<span className="text-foreground">=</span><span className="text-yellow-300">"generate-a-secure-secret-here"</span>
+{`
+# OAuth Providers
+`}DISCORD_CLIENT_ID<span className="text-foreground">=</span><span className="text-yellow-300">""</span>
+DISCORD_CLIENT_SECRET<span className="text-foreground">=</span><span className="text-yellow-300">""</span>
+{`
+# Rate Limiting (Upstash Redis)
+`}UPSTASH_REDIS_REST_URL<span className="text-foreground">=</span><span className="text-yellow-300">""</span>
+UPSTASH_REDIS_REST_TOKEN<span className="text-foreground">=</span><span className="text-yellow-300">""</span>
+{`
+# Global Infrastructure (Optional - users can provide their own)
+`}EMAIL_SERVER_HOST<span className="text-foreground">=</span><span className="text-yellow-300">""</span>
+S3_BUCKET_NAME<span className="text-foreground">=</span><span className="text-yellow-300">""</span>
+NEXT_PUBLIC_RECAPTCHA_SITE_KEY<span className="text-foreground">=</span><span className="text-yellow-300">""</span></code></pre>
+              </div>
             </div>
           </section>
 
           {/* Step 3 */}
-          <section className="space-y-4">
-            <div className="flex items-center gap-3 border-b border-border/50 pb-2">
-              <Database className="w-6 h-6 text-primary" />
-              <h2 className="text-2xl font-bold">3. Database Initialization</h2>
+          <section className="relative group pt-6">
+            <div className="absolute -inset-y-4 -inset-x-4 bg-surface/30 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+            <div className="flex items-center gap-4 mb-6">
+              <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 text-primary shadow-lg shadow-primary/5">
+                <Database className="w-6 h-6" />
+              </div>
+              <h2 className="text-3xl font-bold tracking-tight">3. Initialize the Database</h2>
             </div>
-            <p className="text-muted-foreground">
-              ArachnidForms uses Prisma as its ORM. Once your <code>DATABASE_URL</code> is set, push the schema to your database to create the required tables.
+            <p className="text-muted-foreground text-lg mb-6 pl-16">
+              ArachnidForms uses Prisma ORM. Generate the client and push the schema directly to your Postgres instance to provision the tables.
             </p>
-            <div className="bg-card border border-border/50 rounded-lg p-4 font-mono text-sm overflow-x-auto">
-              <code>
-                npx prisma generate<br/>
-                npx prisma db push
-              </code>
+            <div className="ml-16 bg-[#0d1117] border border-border/30 rounded-xl overflow-hidden shadow-2xl">
+              <div className="flex items-center px-4 py-3 border-b border-border/20 bg-[#161b22]">
+                <div className="flex gap-2">
+                  <div className="w-3 h-3 rounded-full bg-border/50"></div>
+                  <div className="w-3 h-3 rounded-full bg-border/50"></div>
+                  <div className="w-3 h-3 rounded-full bg-border/50"></div>
+                </div>
+                <span className="ml-4 text-xs font-mono text-muted-foreground">bash</span>
+              </div>
+              <div className="p-6 font-mono text-sm leading-relaxed text-blue-300 overflow-x-auto">
+                <span className="text-green-400">npx</span> prisma generate<br/>
+                <span className="text-green-400">npx</span> prisma db push
+              </div>
             </div>
           </section>
 
           {/* Step 4 */}
-          <section className="space-y-4">
-            <div className="flex items-center gap-3 border-b border-border/50 pb-2">
-              <Server className="w-6 h-6 text-primary" />
-              <h2 className="text-2xl font-bold">4. Start the Development Server</h2>
+          <section className="relative group pt-6">
+            <div className="absolute -inset-y-4 -inset-x-4 bg-surface/30 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+            <div className="flex items-center gap-4 mb-6">
+              <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 text-primary shadow-lg shadow-primary/5">
+                <Server className="w-6 h-6" />
+              </div>
+              <h2 className="text-3xl font-bold tracking-tight">4. Launch the Server</h2>
             </div>
-            <p className="text-muted-foreground">
-              You are now ready to run the application locally! Start the Turbopack dev server.
+            <p className="text-muted-foreground text-lg mb-6 pl-16">
+              Boot up the Turbopack development server. Your private instance will be available locally.
             </p>
-            <div className="bg-card border border-border/50 rounded-lg p-4 font-mono text-sm overflow-x-auto">
-              <code>npm run dev</code>
+            <div className="ml-16 bg-[#0d1117] border border-border/30 rounded-xl overflow-hidden shadow-2xl">
+              <div className="flex items-center px-4 py-3 border-b border-border/20 bg-[#161b22]">
+                <div className="flex gap-2">
+                  <div className="w-3 h-3 rounded-full bg-border/50"></div>
+                  <div className="w-3 h-3 rounded-full bg-border/50"></div>
+                  <div className="w-3 h-3 rounded-full bg-border/50"></div>
+                </div>
+                <span className="ml-4 text-xs font-mono text-muted-foreground">bash</span>
+              </div>
+              <div className="p-6 font-mono text-sm leading-relaxed text-blue-300 overflow-x-auto">
+                <span className="text-green-400">npm</span> run dev
+              </div>
             </div>
-            <p className="text-muted-foreground mt-4">
-              Open <strong>https://anachnidforms.vercel.app</strong> in your browser to see your instance live.
-            </p>
+            <div className="ml-16 mt-6 flex items-center gap-3 text-muted-foreground bg-primary/5 border border-primary/10 rounded-lg p-4 inline-flex">
+              <CheckCircle2 className="w-5 h-5 text-primary" />
+              <span>Server running at <strong>http://localhost:3000</strong></span>
+            </div>
           </section>
 
-          {/* Deployment */}
-          <section className="space-y-4 pt-6">
-            <h2 className="text-2xl font-bold">Deploying to Production</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              For production deployment, we highly recommend <a href="https://vercel.com" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">Vercel</a>. 
-              Simply push your code to a GitHub repository, link it to a new Vercel project, and add your Environment Variables in the Vercel dashboard. 
-              Vercel will automatically detect that it's a Next.js App Router application and handle the build process (<code>npm run build</code>) for you.
-            </p>
+          {/* Deployment Card */}
+          <section className="pt-16 pb-8">
+            <div className="bg-gradient-to-br from-surface to-background border border-border/50 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
+              
+              <div className="relative z-10 max-w-3xl">
+                <h2 className="text-3xl md:text-4xl font-black mb-6">Deploying to Vercel</h2>
+                <p className="text-muted-foreground text-lg leading-relaxed mb-8">
+                  For enterprise-grade production deployments, we recommend Vercel. Connect your GitHub repository, add your environment variables in the project settings, and Vercel will automatically build and deploy the Next.js application at the edge.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <a href="https://vercel.com/new" target="_blank" rel="noopener noreferrer">
+                    <Button size="lg" className="rounded-full w-full sm:w-auto h-12 px-8 font-bold text-base shadow-xl">
+                      Deploy on Vercel <ChevronRight className="w-5 h-5 ml-2" />
+                    </Button>
+                  </a>
+                  <a href="https://nextjs.org/docs/deployment" target="_blank" rel="noopener noreferrer">
+                    <Button size="lg" variant="outline" className="rounded-full w-full sm:w-auto h-12 px-8 font-bold text-base bg-background/50 backdrop-blur-sm">
+                      Read Deployment Docs
+                    </Button>
+                  </a>
+                </div>
+              </div>
+            </div>
           </section>
         </div>
       </div>
