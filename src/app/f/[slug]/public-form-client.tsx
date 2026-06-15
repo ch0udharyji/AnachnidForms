@@ -419,8 +419,8 @@ function InnerPublicFormClient({ slug, title, canvasData, session, previousRespo
                         onChange={(e) => handleInputChange(currentNode.id, currentNode.data.label as string, e.target.checked)}
                         className="w-5 h-5 sm:w-6 sm:h-6 mt-0.5 text-primary border-border focus:ring-primary rounded"
                       />
-                      <span className="text-lg sm:text-xl font-medium text-foreground">
-                        {currentNode?.data?.questionType === 'consent' ? 'I agree to the terms and conditions' : 'Select this option'}
+                      <span className="text-lg sm:text-xl font-medium text-foreground whitespace-pre-line">
+                        {currentNode?.data?.description || (currentNode?.data?.questionType === 'consent' ? 'I agree to the terms and conditions' : 'Select this option')}
                       </span>
                     </label>
                   ) : currentNode?.data?.questionType === 'signature' ? (
@@ -428,9 +428,45 @@ function InnerPublicFormClient({ slug, title, canvasData, session, previousRespo
                       value={answersById[currentNode.id] || ""}
                       onChange={(val) => handleInputChange(currentNode.id, currentNode.data.label as string, val)}
                     />
-                  ) : ['statement', 'section', 'video', 'audio', 'html', 'image'].includes(currentNode?.data?.questionType as string) ? (
+                  ) : currentNode?.data?.questionType === 'video' ? (
+                    <div className="w-full max-w-3xl overflow-hidden rounded-xl border border-border bg-muted/50 aspect-video flex items-center justify-center">
+                      {currentNode?.data?.url ? (
+                        currentNode.data.url.includes('youtube.com') || currentNode.data.url.includes('youtu.be') ? (
+                          <iframe 
+                            src={currentNode.data.url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')} 
+                            className="w-full h-full" 
+                            allowFullScreen 
+                          />
+                        ) : (
+                          <video src={currentNode.data.url} controls className="w-full h-full" />
+                        )
+                      ) : (
+                        <p className="text-muted-foreground">No video URL provided.</p>
+                      )}
+                    </div>
+                  ) : currentNode?.data?.questionType === 'audio' ? (
+                    <div className="w-full max-w-lg p-6 rounded-xl border border-border bg-muted/50 flex flex-col items-center justify-center space-y-4">
+                      {currentNode?.data?.url ? (
+                        <audio src={currentNode.data.url} controls className="w-full" />
+                      ) : (
+                        <p className="text-muted-foreground">No audio URL provided.</p>
+                      )}
+                    </div>
+                  ) : currentNode?.data?.questionType === 'textarea' || currentNode?.data?.questionType === 'address' ? (
+                    <textarea 
+                      autoFocus
+                      placeholder={currentNode?.data?.questionType === 'address' ? "Enter your full address here..." : "Type your answer here..."}
+                      className="w-full h-32 sm:h-40 px-4 sm:px-6 py-4 text-lg sm:text-xl font-medium bg-background/50 border border-border focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-xl sm:rounded-2xl shadow-sm resize-y"
+                      value={answersById[currentNode.id] || ""}
+                      onChange={(e) => handleInputChange(currentNode.id, currentNode.data.label as string, e.target.value)}
+                    />
+                  ) : ['statement', 'section', 'html', 'image'].includes(currentNode?.data?.questionType as string) ? (
                     <div className="p-4 sm:p-6 bg-muted/50 rounded-xl border border-border">
-                      <p className="text-muted-foreground">Please review the information above and click OK to continue.</p>
+                      {currentNode?.data?.description ? (
+                        <p className="text-lg text-foreground whitespace-pre-line">{currentNode?.data?.description}</p>
+                      ) : (
+                        <p className="text-muted-foreground">Please review the information above and click OK to continue.</p>
+                      )}
                     </div>
                   ) : (
                     <Input 

@@ -118,14 +118,36 @@ export function PropertiesPanel({
             </div>
           </>
         ) : (
-          <div className="space-y-3">
-            <label className="text-xs font-semibold text-foreground">Block Label</label>
-            <Textarea 
-              value={data.label || ''} 
-              onChange={handleLabelChange}
-              className="resize-none h-20 bg-background text-sm"
-              placeholder="Type your question here..."
-            />
+          <div className="space-y-5">
+            <div className="space-y-3">
+              <label className="text-xs font-semibold text-foreground">Block Label</label>
+              <Textarea 
+                value={data.label || ''} 
+                onChange={handleLabelChange}
+                className="resize-none h-20 bg-background text-sm"
+                placeholder="Type your question here..."
+              />
+            </div>
+            <div className="space-y-3">
+              <label className="text-xs font-semibold text-foreground">Description / Extra Text</label>
+              <Textarea 
+                value={data.description || ''} 
+                onChange={(e) => updateNodeData(selectedNode.id, { ...data, description: e.target.value })}
+                className="resize-none h-16 bg-background text-sm"
+                placeholder="Optional description or consent text..."
+              />
+            </div>
+            {['video', 'audio', 'image', 'url'].includes(type) && (
+              <div className="space-y-3">
+                <label className="text-xs font-semibold text-foreground">Media / Link URL</label>
+                <Input 
+                  value={data.url || ''} 
+                  onChange={(e) => updateNodeData(selectedNode.id, { ...data, url: e.target.value })}
+                  className="h-9 bg-background text-sm"
+                  placeholder="https://..."
+                />
+              </div>
+            )}
           </div>
         )}
         {!isLogic && (
