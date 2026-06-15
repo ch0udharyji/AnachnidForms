@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from 'react';
-import { Type, CheckSquare, List, AlignLeft, CircleDot, Upload, ChevronLeft, ChevronRight, Mail, Hash, Phone, Calendar, Star, ToggleRight, Link as LinkIcon, PenTool, CreditCard, GitBranch, Calculator, MessageSquare, EyeOff, Search, Key, Clock, SlidersHorizontal, Palette, MapPin, Grid, ThumbsUp, Image, ListOrdered, FileSignature, ShieldCheck, Video, Mic, Code } from 'lucide-react';
+import { Type, CheckSquare, List, AlignLeft, CircleDot, Upload, ChevronLeft, ChevronRight, Mail, Hash, Phone, Calendar, Star, ToggleRight, Link as LinkIcon, PenTool, CreditCard, GitBranch, Calculator, MessageSquare, EyeOff, Search, Key, Clock, SlidersHorizontal, Palette, MapPin, Grid, ThumbsUp, Image, ListOrdered, FileSignature, ShieldCheck, Video, Mic, Code, Rows } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
@@ -67,6 +67,7 @@ export function BuilderSidebar() {
       blocks: [
         { type: 'logic', icon: <GitBranch className="w-4 h-4" />, label: 'Condition', desc: 'If / Else branching.' },
         { type: 'calculation', icon: <Calculator className="w-4 h-4" />, label: 'Calculation', desc: 'Compute values.' },
+              { type: 'section', icon: <Rows className="w-4 h-4" />, label: 'Section', desc: 'Section break.' },
       ]
     }
   ];
