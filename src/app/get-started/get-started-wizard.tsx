@@ -80,7 +80,7 @@ export default function GetStartedWizard({ envStatus }: { envStatus?: { hasSmtp:
     if (!envStatus?.hasS3) {
       requiredKeys.push("s3_access", "s3_secret", "s3_region", "s3_bucket");
     }
-    requiredKeys.push("database_url");
+    requiredKeys.push("database_url", "recaptcha_site", "recaptcha_secret");
 
     for (const key of requiredKeys) {
       // @ts-ignore
@@ -233,11 +233,11 @@ export default function GetStartedWizard({ envStatus }: { envStatus?: { hasSmtp:
                     </h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-1">
-                        <Label className="text-[10px] font-semibold">Site Key</Label>
+                        <Label className="text-[10px] font-semibold">Site Key <span className="text-destructive">*</span></Label>
                         <Input name="recaptcha_site" placeholder="6LeIx..." value={integrations.recaptcha_site} onChange={handleChange} className="h-8 text-xs font-mono bg-background" />
                       </div>
                       <div className="space-y-1">
-                        <Label className="text-[10px] font-semibold">Secret Key</Label>
+                        <Label className="text-[10px] font-semibold">Secret Key <span className="text-destructive">*</span></Label>
                         <Input name="recaptcha_secret" type="password" placeholder="6LeIx..." value={integrations.recaptcha_secret} onChange={handleChange} className="h-8 text-xs font-mono bg-background" />
                       </div>
                     </div>
