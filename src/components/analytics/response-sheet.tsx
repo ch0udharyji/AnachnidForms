@@ -87,6 +87,12 @@ export function ResponseSheet({
       let displayVal = val;
       if (Array.isArray(val)) displayVal = val.join(", ");
       else if (typeof val === 'object' && val !== null) displayVal = JSON.stringify(val);
+      else if (typeof val === 'boolean') displayVal = val ? "Yes" : "No";
+      else if (typeof val === 'string' && val.startsWith('data:image/')) {
+        displayVal = `<img src="${val}" alt="Signature" style="max-height: 80px;" />`;
+      } else if (typeof val === 'string' && val.startsWith('typed_sig:')) {
+        displayVal = `<span style="font-family: 'Brush Script MT', cursive; font-size: 24px;">${val.replace('typed_sig:', '')}</span>`;
+      }
       else if (val === undefined || val === null || val === "") displayVal = '<span class="no-answer">No answer provided</span>';
       
       html += `
@@ -198,10 +204,24 @@ export function ResponseSheet({
                 <div className="space-y-8">
                   {columns.map((col, idx) => {
                     const val = answers[col];
-                    let displayVal = val;
-                    if (Array.isArray(val)) displayVal = val.join(", ");
-                    else if (typeof val === 'object' && val !== null) displayVal = JSON.stringify(val);
-                    else if (val === undefined || val === null) displayVal = <span className="text-muted-foreground/50 italic">No answer provided</span>;
+                    let displayVal: React.ReactNode = val;
+                    if (Array.isArray(val)) {
+                      displayVal = (
+                        <div className="flex flex-wrap gap-2">
+                          {val.map((v, i) => <span key={i} className="px-3 py-1.5 bg-surface border border-border rounded-lg text-sm font-medium">{v}</span>)}
+                        </div>
+                      );
+                    }
+                    else if (typeof val === 'object' && val !== null) {
+                      displayVal = <pre className="bg-surface p-4 rounded-xl border border-border/50 text-xs overflow-auto text-muted-foreground">{JSON.stringify(val, null, 2)}</pre>;
+                    }
+                    else if (typeof val === 'boolean') displayVal = val ? "Yes / Checked" : "No / Unchecked";
+                    else if (typeof val === 'string' && val.startsWith('data:image/')) {
+                      displayVal = <img src={val} alt="Signature" className="max-h-32 object-contain border border-border/50 rounded-xl shadow-sm bg-white" />;
+                    } else if (typeof val === 'string' && val.startsWith('typed_sig:')) {
+                      displayVal = <div className="text-4xl text-foreground p-6 border border-border/50 rounded-2xl bg-surface/50 shadow-sm w-full max-w-md text-center overflow-x-auto whitespace-nowrap" style={{ fontFamily: "'Brush Script MT', 'Caveat', 'Great Vibes', cursive", fontStyle: 'italic' }}>{val.replace('typed_sig:', '')}</div>;
+                    }
+                    else if (val === undefined || val === null || val === "") displayVal = <span className="text-muted-foreground/50 italic">No answer provided</span>;
                     
                     return (
                       <div key={col} className="group">

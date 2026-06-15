@@ -99,10 +99,17 @@ export function ResponsesTable({ responses: initialResponses, columns }: { respo
                     </td>
                     {columns.map(col => {
                       const val = answers[col];
-                      let displayVal = val;
+                      let displayVal: React.ReactNode = val;
                       if (Array.isArray(val)) displayVal = val.join(", ");
                       else if (typeof val === 'object' && val !== null) displayVal = JSON.stringify(val);
-                      else if (val === undefined || val === null) displayVal = <span className="text-muted-foreground/50">-</span>;
+                      else if (typeof val === 'boolean') displayVal = val ? "Yes" : "No";
+                      else if (typeof val === 'string' && val.startsWith('data:image/')) {
+                        displayVal = <img src={val} alt="Signature" className="h-8 max-w-[100px] object-contain rounded" />;
+                      } else if (typeof val === 'string' && val.startsWith('typed_sig:')) {
+                        displayVal = <span className="text-xl" style={{ fontFamily: "'Brush Script MT', 'Caveat', 'Great Vibes', cursive", fontStyle: 'italic' }}>{val.replace('typed_sig:', '')}</span>;
+                      } else if (val === undefined || val === null || val === "") {
+                        displayVal = <span className="text-muted-foreground/50">-</span>;
+                      }
                       
                       return (
                         <td key={col} className="px-6 py-4 max-w-[300px] truncate">
