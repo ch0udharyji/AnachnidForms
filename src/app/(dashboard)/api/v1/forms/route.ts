@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { rateLimit } from "@/lib/rate-limit"
 import { auth } from "@/lib/auth"
+import { PrismaClient } from "@prisma/client"
 
 export async function GET(req: Request) {
   try {
@@ -25,10 +26,31 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const forms = await db.form.findMany({
+    const user = await db.user.findUnique({
+      where: { id: session.user.id },
+      select: { integrations: true }
+    })
+
+    let prismaClient: PrismaClient = db as any;
+    const integrations = user?.integrations as any;
+    if (integrations?.database_url) {
+      prismaClient = new PrismaClient({
+        datasources: {
+          db: {
+            url: integrations.database_url,
+          },
+        },
+      } as any) as any;
+    }
+
+    const forms = await prismaClient.form.findMany({
       where: { ownerId: session.user.id },
       orderBy: { updatedAt: "desc" }
     })
+
+    if (integrations?.database_url) {
+      await prismaClient.$disconnect();
+    }
 
     return NextResponse.json({ forms })
   } catch (error) {

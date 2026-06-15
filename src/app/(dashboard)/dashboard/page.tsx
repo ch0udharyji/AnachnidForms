@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Plus, FileText, MessageSquare, Clock, Activity, ExternalLink, Settings, BarChart, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PrismaClient } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
 import { createFormAction } from "@/app/actions/form";
 
@@ -12,7 +13,24 @@ export default async function DashboardPage() {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
 
-  const forms = await db.form.findMany({
+  const user = await db.user.findUnique({
+    where: { id: session.user.id },
+    select: { integrations: true }
+  });
+
+  let prismaClient: PrismaClient = db as any;
+  const integrations = user?.integrations as any;
+  if (integrations?.database_url) {
+    prismaClient = new PrismaClient({
+      datasources: {
+        db: {
+          url: integrations.database_url,
+        },
+      },
+    } as any) as any;
+  }
+
+  const forms = await prismaClient.form.findMany({
     where: { ownerId: session.user.id },
     orderBy: { updatedAt: "desc" },
     include: {
@@ -21,6 +39,10 @@ export default async function DashboardPage() {
       }
     }
   });
+
+  if (integrations?.database_url) {
+    await prismaClient.$disconnect();
+  }
 
   const totalForms = forms.length;
   const totalResponses = forms.reduce((acc, form) => acc + form._count.responses, 0);

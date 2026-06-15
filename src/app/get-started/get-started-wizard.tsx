@@ -31,7 +31,8 @@ export default function GetStartedWizard({ envStatus }: { envStatus?: { hasSmtp:
     s3_region: "",
     s3_bucket: "",
     recaptcha_site: "",
-    recaptcha_secret: ""
+    recaptcha_secret: "",
+    database_url: ""
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -251,6 +252,10 @@ export default function GetStartedWizard({ envStatus }: { envStatus?: { hasSmtp:
                       <div className="space-y-1">
                         <Label className="text-xs">Discord Webhook</Label>
                         <Input name="discord_webhook" type="url" placeholder="https://discord.com/..." value={integrations.discord_webhook} onChange={handleChange} className="h-8 text-xs font-mono bg-background" />
+                      </div>
+                      <div className="space-y-1 sm:col-span-2">
+                        <Label className="text-xs">Database URL</Label>
+                        <Input name="database_url" type="password" placeholder="postgresql://..." value={integrations.database_url} onChange={handleChange} className="h-8 text-xs font-mono bg-background" />
                       </div>
                     </div>
                   </div>

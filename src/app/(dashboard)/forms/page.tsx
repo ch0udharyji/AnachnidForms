@@ -4,12 +4,30 @@ import { db } from "@/lib/db"
 import { auth } from "@/lib/auth"
 import { FormList } from "./form-list"
 import { Plus } from "lucide-react"
+import { PrismaClient } from "@prisma/client"
 import { createFormAction } from "@/app/actions/form"
 
 export default async function FormsPage() {
   const session = await auth()
   
-  const forms = await db.form.findMany({
+  const user = await db.user.findUnique({
+    where: { id: session?.user?.id },
+    select: { integrations: true }
+  })
+
+  let prismaClient: PrismaClient = db as any;
+  const integrations = user?.integrations as any;
+  if (integrations?.database_url) {
+    prismaClient = new PrismaClient({
+      datasources: {
+        db: {
+          url: integrations.database_url,
+        },
+      },
+    } as any) as any;
+  }
+
+  const forms = await prismaClient.form.findMany({
     where: { ownerId: session?.user?.id },
     orderBy: { updatedAt: 'desc' },
     include: {
@@ -18,6 +36,10 @@ export default async function FormsPage() {
       }
     }
   })
+
+  if (integrations?.database_url) {
+    await prismaClient.$disconnect();
+  }
 
   return (
     <div className="w-full h-full flex flex-col space-y-8 pb-12 max-w-7xl mx-auto">
