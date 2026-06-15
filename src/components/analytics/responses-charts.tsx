@@ -97,23 +97,23 @@ export function ResponsesCharts({ form }: { form: any }) {
                     ))}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ backgroundColor: 'hsl(var(--background))', borderColor: 'hsl(var(--border))', borderRadius: '8px', color: 'hsl(var(--foreground))' }}
-                    itemStyle={{ color: 'hsl(var(--foreground))' }}
+                    contentStyle={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)', borderRadius: '8px', color: 'var(--foreground)' }}
+                    itemStyle={{ color: 'var(--foreground)' }}
                   />
-                  <Legend verticalAlign="bottom" height={36} wrapperStyle={{ fontSize: '12px', color: 'hsl(var(--foreground))' }} />
+                  <Legend verticalAlign="bottom" height={36} wrapperStyle={{ fontSize: '12px', color: 'var(--foreground)' }} />
                 </PieChart>
               </ResponsiveContainer>
             ) : chart.type === 'bar' ? (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chart.data} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} opacity={0.5} />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }} dy={10} />
-                  <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} opacity={0.5} />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }} dy={10} />
+                  <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }} />
                   <Tooltip 
-                    cursor={{ fill: 'hsl(var(--primary) / 0.1)' }}
-                    contentStyle={{ backgroundColor: 'hsl(var(--background))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
+                    cursor={{ fill: 'var(--primary)', opacity: 0.1 }}
+                    contentStyle={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)', borderRadius: '8px', color: 'var(--foreground)' }}
                   />
-                  <Bar dataKey="count" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} maxBarSize={60}>
+                  <Bar dataKey="count" fill="var(--primary)" radius={[4, 4, 0, 0]} maxBarSize={60}>
                     {chart.data.map((entry: any, index: number) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
