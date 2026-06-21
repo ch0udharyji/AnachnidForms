@@ -5,6 +5,7 @@ import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getTemplateData } from "@/lib/templates-data";
+import { randomBytes } from "crypto";
 
 export async function createFormAction(titleOrFormData?: FormData | string, descriptionInput?: string) {
   const session = await auth();
