@@ -121,7 +121,7 @@ export function getTemplateData(title: string) {
   // Link nodes sequentially
   for (let i = 0; i < nodes.length - 1; i++) {
     edges.push({
-      id: \`edge_\${getId()}\`,
+      id: `edge_${getId()}`,
       source: nodes[i].id,
       target: nodes[i+1].id
     });
