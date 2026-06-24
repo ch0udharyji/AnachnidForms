@@ -37,8 +37,7 @@ export function LoginForm() {
       setError("Invalid email or password")
       setLoading(false)
     } else {
-      router.push(callbackUrl)
-      router.refresh()
+      window.location.assign(callbackUrl)
     }
   }
 
@@ -115,8 +114,7 @@ export function LoginForm() {
             setLoading(true)
             const res = await signIn("credentials", { redirect: false, isTestMode: "true" })
             if (!res?.error) {
-              router.push(callbackUrl)
-              router.refresh()
+              window.location.assign(callbackUrl)
             } else {
               setError("Failed to start test mode")
               setLoading(false)
